@@ -13,6 +13,6 @@ make reset
 <br>
 
 #### TUIST GRAPH (DEPENDENCIES)
-![graph](https://github.com/user-attachments/assets/9c7ef354-524c-4b52-9ac5-e6891deebd20)
+![graph](https://github.com/user-attachments/assets/ddb7ccee-f63b-4070-bff2-c03783264670)
 - Micro Feature, uFeature(The Modular Architecture)
 - 각 Feature 간 독립적인 개발 환경 보장
