@@ -12,7 +12,8 @@ let project = Project.module(
         .SPM.Alamofire,
         .SPM.Moya,
         .SPM.Swinject,
-        .SPM.SnapKit
+        .SPM.SnapKit,
+        .SPM.KakaoSDKUser
       ]
     )
   ]
