@@ -3,9 +3,9 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.module(
-  name: ModulePaths.Shared.Networks.rawValue,
+  name: ModulePaths.Core.Networks.rawValue,
   targets: [
-    .implements(module: .shared(.Networks), dependencies: [
+    .implements(module: .core(.Networks), dependencies: [
       .core(target: .CoreKit)
     ])
   ]

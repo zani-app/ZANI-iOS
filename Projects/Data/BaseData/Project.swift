@@ -6,7 +6,7 @@ let project = Project.module(
   name: ModulePaths.Data.BaseData.rawValue,
   targets: [
     .implements(module: .data(.BaseData), dependencies: [
-      .shared(target: .Networks),
+      .core(target: .Networks),
       .domain(target: .BaseDomain)
     ])
   ]

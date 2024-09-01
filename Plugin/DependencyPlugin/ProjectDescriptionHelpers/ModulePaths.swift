@@ -53,12 +53,12 @@ public extension ModulePaths {
 public extension ModulePaths {
     enum Core: String, MicroTargetPathConvertable {
         case CoreKit
+        case Networks
     }
 }
 
 public extension ModulePaths {
     enum Shared: String, MicroTargetPathConvertable {
-        case Networks
         case GlobalThirdPartyLibrary
     }
 }
