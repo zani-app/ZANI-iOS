@@ -9,6 +9,7 @@ public extension TargetDependency.SPM {
   static let Moya = TargetDependency.external(name: "Moya")
   static let Swinject = TargetDependency.external(name: "Swinject")
   static let SnapKit = TargetDependency.external(name: "SnapKit")
+  static let KakaoSDKUser = TargetDependency.external(name: "KakaoSDKUser")
 }
 
 public extension Package {
