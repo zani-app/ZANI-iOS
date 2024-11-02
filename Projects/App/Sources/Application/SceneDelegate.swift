@@ -1,5 +1,6 @@
 import UIKit
 import RootFeature
+import AuthFeature
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   
@@ -14,7 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     window = UIWindow(frame: scene.coordinateSpace.bounds)
     window?.windowScene = scene
-    window?.rootViewController = UINavigationController(rootViewController: TestVC())
+    window?.rootViewController = UINavigationController(rootViewController: AuthMainVC())
     window?.makeKeyAndVisible()
   }
   

@@ -82,7 +82,7 @@ extension UIFont {
     }
   }
   
-  static func zaniAttributedString(text: String, fontType: ZANIFontType) -> NSAttributedString {
+  public static func zaniAttributedString(text: String, fontType: ZANIFontType) -> NSAttributedString {
     return fontType.attributedString(text: text)
   }
 }
