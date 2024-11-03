@@ -17,6 +17,8 @@ import SnapKit
 
 public class AuthMainVC: UIViewController {
   
+  public var viewModel: AuthViewModel = AuthViewModel()
+  
   private lazy var titleLabel: UILabel = {
     let title = UILabel()
     title.text = "로그인/회원가입"
@@ -80,8 +82,29 @@ public class AuthMainVC: UIViewController {
   
   public override func viewDidLoad() {
     super.viewDidLoad()
+    self.bindViewModels()
     self.setUI()
     self.setLayout()
+  }
+}
+
+private extension AuthMainVC {
+  func bindViewModels() {
+    let tappedKakaoLoginButton = self.kakaoLoginButton
+      .publisher(for: .touchUpInside)
+      .compactMap { _ in () }
+      .receive(on: RunLoop.main)
+      .eraseToAnyPublisher()
+    
+    let input = AuthViewModel.Input(
+      viewDidAppear: tappedKakaoLoginButton,
+      tappedKakaoLoginButton: tappedKakaoLoginButton,
+      tappedAppleLoginButton: tappedKakaoLoginButton,
+      tappedEmailLoginButton: tappedKakaoLoginButton,
+      tappedEmailSignUp: tappedKakaoLoginButton
+    )
+    
+    let _ = self.viewModel.transform(from: input)
   }
 }
 

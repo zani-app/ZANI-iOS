@@ -1,6 +1,7 @@
+
 import UIKit
+
 import RootFeature
-import AuthFeature
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   
@@ -15,7 +16,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     window = UIWindow(frame: scene.coordinateSpace.bounds)
     window?.windowScene = scene
-    window?.rootViewController = UINavigationController(rootViewController: AuthMainVC())
+    
+    let isLoggedIn = false // Test
+    let navigationController = UINavigationController()
+    
+    self.window?.rootViewController = navigationController
+    let coordinator = AppCoordinator(navigationController: navigationController, isLoggedIn: isLoggedIn)
+    coordinator.start()
+    
     window?.makeKeyAndVisible()
   }
   
@@ -29,4 +37,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   
   func sceneDidEnterBackground(_ scene: UIScene) {}
 }
-
