@@ -36,15 +36,16 @@ public class SetNicknameVC: UIViewController {
   
   private lazy var nextButton: CustomLargeButton = {
     let button = CustomLargeButton(title: "다음")
-    button.setEnabled(true)
+    button.setEnabled(false)
     return button
   }()
   
   private var nextButtonBottomConstraint: Constraint?
-  private var cancellables = Set<AnyCancellable>()
+  private var cancelBag = CancelBag()
   
   public override func viewDidLoad() {
     super.viewDidLoad()
+    self.bindViewModels()
     self.hideKeyboardWhenTappedAround()
     self.setUI()
     self.setLayout()
@@ -83,6 +84,37 @@ private extension SetNicknameVC {
 }
 
 private extension SetNicknameVC {
+  func bindViewModels() {
+    let tappedNicknameCheckButton = self.nextButton
+      .publisher(for: .touchUpInside)
+      .compactMap { _ in () }
+      .receive(on: RunLoop.main)
+      .eraseToAnyPublisher()
+    
+    let input = AuthViewModel.Input(
+      tappedKakaoLoginButton: nil,
+      tappedAppleLoginButton: nil,
+      tappedEmailLoginButton: nil,
+      tappedNicknameCheckButton: tappedNicknameCheckButton,
+      tappedSignUpSuccessButton: nil
+    )
+    
+    nicknameTextField.textChanged
+      .receive(on: RunLoop.main)
+      .sink { [weak self] text in
+        guard let self = self else { return }
+        guard let text = text else { return }
+        
+        self.nextButton.setEnabled(!text.isEmpty)
+      }
+      .store(in: cancelBag)
+    
+    let _ = self.viewModel.transform(from: input)
+  }
+  
+}
+
+private extension SetNicknameVC {
   private func setupKeyboardObservers() {
     NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
       .compactMap { $0.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect }
@@ -95,7 +127,7 @@ private extension SetNicknameVC {
           self.view.layoutIfNeeded()
         }
       }
-      .store(in: &cancellables)
+      .store(in: cancelBag)
     
     NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
       .sink { [weak self] _ in
@@ -106,6 +138,6 @@ private extension SetNicknameVC {
           self.view.layoutIfNeeded()
         }
       }
-      .store(in: &cancellables)
+      .store(in: cancelBag)
   }
 }

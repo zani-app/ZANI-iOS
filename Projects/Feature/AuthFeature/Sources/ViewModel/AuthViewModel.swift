@@ -19,27 +19,45 @@ import AuthFeatureInterface
 public class AuthViewModel {
   
   public struct Input {
-    let viewDidAppear: AnyPublisher<Void, Never>
-    let tappedKakaoLoginButton: AnyPublisher<Void, Never>
-    let tappedAppleLoginButton: AnyPublisher<Void, Never>
-    let tappedEmailLoginButton: AnyPublisher<Void, Never>
-    let tappedEmailSignUp: AnyPublisher<Void, Never>
+    let tappedKakaoLoginButton: AnyPublisher<Void, Never>?
+    let tappedAppleLoginButton: AnyPublisher<Void, Never>?
+    let tappedEmailLoginButton: AnyPublisher<Void, Never>?
+    let tappedNicknameCheckButton: AnyPublisher<Void, Never>?
+    let tappedSignUpSuccessButton: AnyPublisher<Void, Never>?
   }
   
   public struct Output {
     
   }
   
-  private var cancellables = Set<AnyCancellable>()
+  private var cancelBag = CancelBag()
   
   public func transform(from input: Input) -> Output {
     let output = Output()
     
-    input.tappedKakaoLoginButton
+    input.tappedKakaoLoginButton?
       .sink { _ in
-        print("test action")
+        print("kakao action")
       }
-      .store(in: &self.cancellables)
+      .store(in: self.cancelBag)
+    
+    input.tappedAppleLoginButton?
+      .sink { _ in
+        print("apple action")
+      }
+      .store(in: self.cancelBag)
+    
+    input.tappedEmailLoginButton?
+      .sink { _ in
+        print("email action")
+      }
+      .store(in: self.cancelBag)
+    
+    input.tappedNicknameCheckButton?
+      .sink { _ in
+        print("Nickname Check action")
+      }
+      .store(in: self.cancelBag)
     
     return output
   }

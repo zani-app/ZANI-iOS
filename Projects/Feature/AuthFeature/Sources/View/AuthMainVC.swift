@@ -96,12 +96,24 @@ private extension AuthMainVC {
       .receive(on: RunLoop.main)
       .eraseToAnyPublisher()
     
+    let tappedAppleLoginButton = self.appleLoginButton
+      .publisher(for: .touchUpInside)
+      .compactMap { _ in () }
+      .receive(on: RunLoop.main)
+      .eraseToAnyPublisher()
+    
+    let tappedEmailLoginButton = self.emailLoginButton
+      .publisher(for: .touchUpInside)
+      .compactMap { _ in () }
+      .receive(on: RunLoop.main)
+      .eraseToAnyPublisher()
+    
     let input = AuthViewModel.Input(
-      viewDidAppear: tappedKakaoLoginButton,
       tappedKakaoLoginButton: tappedKakaoLoginButton,
-      tappedAppleLoginButton: tappedKakaoLoginButton,
-      tappedEmailLoginButton: tappedKakaoLoginButton,
-      tappedEmailSignUp: tappedKakaoLoginButton
+      tappedAppleLoginButton: tappedAppleLoginButton,
+      tappedEmailLoginButton: tappedEmailLoginButton,
+      tappedNicknameCheckButton: nil,
+      tappedSignUpSuccessButton: nil
     )
     
     let _ = self.viewModel.transform(from: input)

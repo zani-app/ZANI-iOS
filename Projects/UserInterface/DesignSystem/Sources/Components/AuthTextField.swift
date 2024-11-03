@@ -84,7 +84,7 @@ public class AuthTextField: UIView {
   private let rightIcon = UIImage()
   private let alertLabel = UILabel()
   
-  private var type: AuthTextFieldType!
+  public var type: AuthTextFieldType!
   private var textFieldState = CurrentValueSubject<AuthTextFieldState, Never>(.normal)
   
   public var textChanged: AnyPublisher<String?, Never> {
@@ -129,7 +129,8 @@ extension AuthTextField {
         if text.isEmpty {
           
         }
-      }.store(in: cancelBag)
+      }
+      .store(in: cancelBag)
     
     textFieldState
       .sink { [weak self] state in
