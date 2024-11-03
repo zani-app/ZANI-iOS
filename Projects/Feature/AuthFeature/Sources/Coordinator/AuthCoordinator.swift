@@ -22,7 +22,7 @@ public final class AuthCoordinator: Coordinator {
   }
   
   public func start() {
-    let authVC = AuthMainVC()
+    let authVC = SetNicknameVC()
     navigationController.pushViewController(authVC, animated: true)
   }
 }
