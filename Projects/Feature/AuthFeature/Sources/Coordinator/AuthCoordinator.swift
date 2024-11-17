@@ -14,6 +14,8 @@ import BaseFeature
 
 public protocol AuthViewModelDelegate: AnyObject {
   func goToNickname()
+  func goToDone()
+  
   func goBack()
 }
 
@@ -25,9 +27,6 @@ public class AuthCoordinator: Coordinator {
   
   private let viewModel: AuthViewModel = AuthViewModel()
   
-  private let authMainVC = AuthMainVC()
-  private let setNicknameVC = SetNicknameVC()
-  
   public init(
     navigationController: UINavigationController
   ) {
@@ -35,16 +34,28 @@ public class AuthCoordinator: Coordinator {
   }
   
   public func start() {
-    viewModel.delegate = self
+    let authMainVC = AuthMainVC()
     authMainVC.viewModel = viewModel
+    
+    viewModel.delegate = self
     navigationController.pushViewController(authMainVC, animated: false)
   }
 }
 
 extension AuthCoordinator: AuthViewModelDelegate {
+  
   public func goToNickname() {
+    let setNicknameVC = SetNicknameVC()
     setNicknameVC.viewModel = viewModel
+    
     navigationController.pushViewController(setNicknameVC, animated: true)
+  }
+  
+  public func goToDone() {
+    let signUpDoneVC = SignUpDoneVC()
+    signUpDoneVC.viewModel = viewModel
+    
+    navigationController.pushViewController(signUpDoneVC, animated: true)
   }
   
   public func goBack() {

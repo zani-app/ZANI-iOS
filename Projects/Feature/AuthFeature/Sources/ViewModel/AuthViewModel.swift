@@ -57,6 +57,7 @@ public class AuthViewModel {
     input.tappedNicknameCheckButton?
       .sink { _ in
         print("Nickname Check action")
+        self.delegate?.goToDone()
       }
       .store(in: self.cancelBag)
     
