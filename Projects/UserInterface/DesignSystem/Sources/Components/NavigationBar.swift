@@ -11,7 +11,6 @@ import UIKit
 
 import CoreKit
 
-import Combine
 import SnapKit
 
 final public class NavigationBar: UIView {
@@ -46,7 +45,11 @@ final public class NavigationBar: UIView {
   private var cancelBag = CancelBag()
   
   // MARK: - Initializer
-  public init(leftIcon: UIImage?, title: String?, rightIcon: UIImage?) {
+  public init(
+    leftIcon: UIImage? = nil,
+    title: String? = nil,
+    rightIcon: UIImage? = nil
+  ) {
     super.init(frame: .zero)
     
     leftButton.setImage(leftIcon, for: .normal)
@@ -93,9 +96,8 @@ extension NavigationBar {
     }
     
     leftButton.snp.makeConstraints { make in
-      make.width.equalTo(32)
-      make.height.equalTo(40)
       make.top.bottom.equalToSuperview()
+      make.width.equalTo(32)
       make.leading.equalToSuperview().inset(12)
       make.centerY.equalTo(self)
     }
@@ -107,9 +109,8 @@ extension NavigationBar {
     }
     
     rightButton.snp.makeConstraints { make in
-      make.width.equalTo(32)
-      make.height.equalTo(40)
       make.top.bottom.equalToSuperview()
+      make.width.equalTo(32)
       make.trailing.equalToSuperview().inset(12)
       make.centerY.equalTo(self)
     }

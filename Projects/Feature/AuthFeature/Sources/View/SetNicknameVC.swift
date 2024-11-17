@@ -17,13 +17,24 @@ import SnapKit
 
 public class SetNicknameVC: UIViewController {
   
-  public var viewModel: AuthViewModel = AuthViewModel()
+  public var viewModel: AuthViewModel!
+  
+  private lazy var navigationBar: NavigationBar = {
+    let navigationBar = NavigationBar(
+      leftIcon: UIImage(systemName: "chevron.left"),
+      title: "회원가입"
+    )
+    
+    return navigationBar
+  }()
   
   private lazy var titleLabel: UILabel = {
     let title = UILabel()
-    title.text = "자니에서 사용할\n닉네임을 입력해주세요"
+    title.attributedText = UIFont.zaniAttributedString(
+      text: "자니에서 사용할\n닉네임을 입력해주세요",
+      fontType: .head1
+    )
     title.numberOfLines = 2
-    title.font = UIFont.ZANIFontType.head1.font
     title.textColor = .white
     title.textAlignment = .left
     return title
@@ -41,6 +52,7 @@ public class SetNicknameVC: UIViewController {
   }()
   
   private var nextButtonBottomConstraint: Constraint?
+  
   private var cancelBag = CancelBag()
   
   public override func viewDidLoad() {
@@ -59,12 +71,18 @@ private extension SetNicknameVC {
   }
   
   func setLayout() {
+    self.view.addSubview(navigationBar)
     self.view.addSubview(titleLabel)
     self.view.addSubview(nicknameTextField)
     self.view.addSubview(nextButton)
     
+    navigationBar.snp.makeConstraints { make in
+      make.top.equalTo(view.safeAreaLayoutGuide)
+      make.leading.trailing.equalToSuperview()
+    }
+    
     titleLabel.snp.makeConstraints { make in
-      make.top.equalTo(view.safeAreaLayoutGuide).offset(62)
+      make.top.equalTo(navigationBar.snp.bottom).offset(62)
       make.leading.equalToSuperview().offset(20)
     }
     
@@ -91,12 +109,18 @@ private extension SetNicknameVC {
       .receive(on: RunLoop.main)
       .eraseToAnyPublisher()
     
+    let tappedBackButton = self.navigationBar.leftButtonTap
+      .compactMap { _ in () }
+      .receive(on: RunLoop.main)
+      .eraseToAnyPublisher()
+    
     let input = AuthViewModel.Input(
       tappedKakaoLoginButton: nil,
       tappedAppleLoginButton: nil,
       tappedEmailLoginButton: nil,
       tappedNicknameCheckButton: tappedNicknameCheckButton,
-      tappedSignUpSuccessButton: nil
+      tappedSignUpSuccessButton: nil,
+      tappedBackButton: tappedBackButton
     )
     
     nicknameTextField.textChanged

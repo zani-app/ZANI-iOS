@@ -11,10 +11,7 @@ import Combine
 import BaseDomain
 import CoreKit
 
-import KakaoSDKAuth
 import KakaoSDKUser
-
-import AuthFeatureInterface
 
 public class AuthViewModel {
   
@@ -24,11 +21,14 @@ public class AuthViewModel {
     let tappedEmailLoginButton: AnyPublisher<Void, Never>?
     let tappedNicknameCheckButton: AnyPublisher<Void, Never>?
     let tappedSignUpSuccessButton: AnyPublisher<Void, Never>?
+    let tappedBackButton: AnyPublisher<Void, Never>?
   }
   
   public struct Output {
     
   }
+  
+  weak var delegate: AuthViewModelDelegate?
   
   private var cancelBag = CancelBag()
   
@@ -38,6 +38,7 @@ public class AuthViewModel {
     input.tappedKakaoLoginButton?
       .sink { _ in
         print("kakao action")
+        self.delegate?.goToNickname()
       }
       .store(in: self.cancelBag)
     
@@ -56,6 +57,13 @@ public class AuthViewModel {
     input.tappedNicknameCheckButton?
       .sink { _ in
         print("Nickname Check action")
+      }
+      .store(in: self.cancelBag)
+    
+    input.tappedBackButton?
+      .sink { _ in
+        print("tapped Back Button")
+        self.delegate?.goBack()
       }
       .store(in: self.cancelBag)
     

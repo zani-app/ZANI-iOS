@@ -17,7 +17,7 @@ import SnapKit
 
 public class AuthMainVC: UIViewController {
   
-  public var viewModel: AuthViewModel = AuthViewModel()
+  public var viewModel: AuthViewModel!
   
   private lazy var titleLabel: UILabel = {
     let title = UILabel()
@@ -82,6 +82,7 @@ public class AuthMainVC: UIViewController {
   
   public override func viewDidLoad() {
     super.viewDidLoad()
+    self.navigationController?.navigationBar.isHidden = true
     self.bindViewModels()
     self.setUI()
     self.setLayout()
@@ -113,7 +114,8 @@ private extension AuthMainVC {
       tappedAppleLoginButton: tappedAppleLoginButton,
       tappedEmailLoginButton: tappedEmailLoginButton,
       tappedNicknameCheckButton: nil,
-      tappedSignUpSuccessButton: nil
+      tappedSignUpSuccessButton: nil,
+      tappedBackButton: nil
     )
     
     let _ = self.viewModel.transform(from: input)

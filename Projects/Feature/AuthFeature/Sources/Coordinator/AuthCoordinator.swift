@@ -12,17 +12,42 @@ import AuthFeatureInterface
 
 import BaseFeature
 
-public final class AuthCoordinator: Coordinator {
-  public var childCoordinators: [Coordinator] = []
+public protocol AuthViewModelDelegate: AnyObject {
+  func goToNickname()
+  func goBack()
+}
+
+public class AuthCoordinator: Coordinator {
+  public var parentCoordinator: Coordinator?
+  public var childCoordinators = [Coordinator]()
   
   private let navigationController: UINavigationController
   
-  public init(navigationController: UINavigationController) {
+  private let viewModel: AuthViewModel = AuthViewModel()
+  
+  private let authMainVC = AuthMainVC()
+  private let setNicknameVC = SetNicknameVC()
+  
+  public init(
+    navigationController: UINavigationController
+  ) {
     self.navigationController = navigationController
   }
   
   public func start() {
-    let authVC = SetNicknameVC()
-    navigationController.pushViewController(authVC, animated: true)
+    viewModel.delegate = self
+    authMainVC.viewModel = viewModel
+    navigationController.pushViewController(authMainVC, animated: false)
+  }
+}
+
+extension AuthCoordinator: AuthViewModelDelegate {
+  public func goToNickname() {
+    setNicknameVC.viewModel = viewModel
+    navigationController.pushViewController(setNicknameVC, animated: true)
+  }
+  
+  public func goBack() {
+    navigationController.popViewController(animated: true)
   }
 }
