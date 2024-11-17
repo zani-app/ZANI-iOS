@@ -13,23 +13,36 @@ import BaseFeature
 
 public class AppCoordinator: Coordinator {
   
+  public var parentCoordinator: Coordinator? = nil
   public var childCoordinators: [Coordinator] = []
   
-  private let navigationController: UINavigationController
-  private var isLoggedIn: Bool
+  private let window: UIWindow?
   
-  public init(navigationController: UINavigationController, isLoggedIn: Bool) {
-    self.navigationController = navigationController
-    self.isLoggedIn = isLoggedIn
+  lazy var navigationController: UINavigationController = {
+    let rootViewController = UIViewController()
+    let navigationController = UINavigationController(rootViewController: rootViewController)
+    return navigationController
+  }()
+  
+  public init(window: UIWindow?) {
+    self.window = window
   }
   
   public func start() {
+    guard let window = window else { return }
+    
+    window.rootViewController = navigationController
+    window.makeKeyAndVisible()
+    
     runAuthFlow()
   }
-  
+}
+
+extension AppCoordinator {
   private func runAuthFlow() {
     let authCoordinator = AuthCoordinator(navigationController: navigationController)
-    childCoordinators.append(authCoordinator)
+    authCoordinator.parentCoordinator = self
+    addChildCoordinator(authCoordinator)
     authCoordinator.start()
   }
 }

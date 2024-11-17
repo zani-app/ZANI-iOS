@@ -6,6 +6,7 @@ import RootFeature
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   
   var window: UIWindow?
+  var appCoordinator: AppCoordinator?
   
   func scene(
     _ scene: UIScene,
@@ -14,17 +15,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   ) {
     guard let scene = (scene as? UIWindowScene) else { return }
     
-    window = UIWindow(frame: scene.coordinateSpace.bounds)
-    window?.windowScene = scene
+    window = UIWindow(windowScene: scene)
+    appCoordinator = AppCoordinator(window: window)
     
-    let isLoggedIn = false // Test
-    let navigationController = UINavigationController()
-    
-    self.window?.rootViewController = navigationController
-    let coordinator = AppCoordinator(navigationController: navigationController, isLoggedIn: isLoggedIn)
-    coordinator.start()
-    
-    window?.makeKeyAndVisible()
+    appCoordinator?.start()
   }
   
   func sceneDidDisconnect(_ scene: UIScene) {}
