@@ -1,5 +1,10 @@
 ## 🌙 ZANI-iOS Repository
 ZANI Project의 iOS Repository입니다.
+<br>
+
+### Tech Stack
+UIKit + Combine (mvvm-c)
+<br>
 
 ### Tuist Setting
 <strong> 1. generate project </strong>
