@@ -1,9 +1,12 @@
+
 import UIKit
+
 import RootFeature
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   
   var window: UIWindow?
+  var appCoordinator: AppCoordinator?
   
   func scene(
     _ scene: UIScene,
@@ -12,10 +15,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   ) {
     guard let scene = (scene as? UIWindowScene) else { return }
     
-    window = UIWindow(frame: scene.coordinateSpace.bounds)
-    window?.windowScene = scene
-    window?.rootViewController = UINavigationController(rootViewController: TestVC())
-    window?.makeKeyAndVisible()
+    window = UIWindow(windowScene: scene)
+    appCoordinator = AppCoordinator(window: window)
+    
+    appCoordinator?.start()
   }
   
   func sceneDidDisconnect(_ scene: UIScene) {}
@@ -28,4 +31,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   
   func sceneDidEnterBackground(_ scene: UIScene) {}
 }
-

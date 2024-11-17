@@ -41,9 +41,9 @@ public enum AuthTextFieldType {
   public var maxLength: Int {
     switch self {
     case .email: 50
-    case .password: 50
-    case .passwordConfirm: 50
-    case .nickname: 20
+    case .password: 30
+    case .passwordConfirm: 30
+    case .nickname: 8
     }
   }
 }
@@ -57,9 +57,9 @@ public enum AuthTextFieldState {
   
   public var borderColor: UIColor {
     switch self {
-    case .normal:
+    case .normal, .confirm:
       return DesignSystemAsset.mainGray.color
-    case .editing, .confirm:
+    case .editing:
       return DesignSystemAsset.mainYellow.color
     case .warning:
       return DesignSystemAsset.errorRed.color
@@ -80,12 +80,12 @@ public class AuthTextField: UIView {
   }()
   
   private let textFieldContainerView = UIView()
-  private let textField = UITextField()
+  private let textField = PastBlockedTextField()
   private let rightIcon = UIImage()
   private let alertLabel = UILabel()
   
-  private var type: AuthTextFieldType!
-  private var textFieldState: AuthTextFieldState!
+  public var type: AuthTextFieldType!
+  private var textFieldState = CurrentValueSubject<AuthTextFieldState, Never>(.normal)
   
   public var textChanged: AnyPublisher<String?, Never> {
     textField.publisher(for: .editingChanged)
@@ -99,7 +99,6 @@ public class AuthTextField: UIView {
   public init(type: AuthTextFieldType) {
     super.init(frame: .zero)
     self.type = type
-    self.textFieldState = .normal
     self.setUI()
     self.setLayout()
     self.setDelegate()
@@ -130,7 +129,14 @@ extension AuthTextField {
         if text.isEmpty {
           
         }
-      }.store(in: cancelBag)
+      }
+      .store(in: cancelBag)
+    
+    textFieldState
+      .sink { [weak self] state in
+        self?.textField.layer.borderColor = state.borderColor.cgColor
+      }
+      .store(in: cancelBag)
   }
 }
 
@@ -154,7 +160,6 @@ extension AuthTextField {
     textField.leftViewMode = .always
     textField.layer.cornerRadius = 8
     textField.layer.borderWidth = 1.0
-    textField.layer.borderColor = self.textFieldState.borderColor.cgColor
     textField.backgroundColor = DesignSystemAsset.main1.color
     textField.font = UIFont.ZANIFontType.body1.font
     textField.returnKeyType = .done
@@ -194,11 +199,11 @@ extension AuthTextField {
 extension AuthTextField: UITextFieldDelegate {
   
   public func textFieldDidBeginEditing(_ textField: UITextField) {
-    self.textFieldState = .editing
+    self.textFieldState.send(.editing)
   }
   
   public func textFieldDidEndEditing(_ textField: UITextField) {
-    self.textFieldState = .confirm
+    self.textFieldState.send(.confirm)
   }
   
   public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
