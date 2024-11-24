@@ -19,6 +19,9 @@ public class SetNicknameVC: UIViewController {
   
   public var viewModel: AuthViewModel!
   
+  private let input: PassthroughSubject<AuthViewModel.Input, Never> = .init()
+  private var cancelBag = CancelBag()
+  
   private lazy var navigationBar: NavigationBar = {
     let navigationBar = NavigationBar(
       leftIcon: UIImage(systemName: "chevron.left"),
@@ -53,11 +56,9 @@ public class SetNicknameVC: UIViewController {
   
   private var nextButtonBottomConstraint: Constraint?
   
-  private var cancelBag = CancelBag()
-  
   public override func viewDidLoad() {
     super.viewDidLoad()
-    self.bindViewModels()
+    self.bind()
     self.hideKeyboardWhenTappedAround()
     self.setUI()
     self.setLayout()
@@ -102,26 +103,22 @@ private extension SetNicknameVC {
 }
 
 private extension SetNicknameVC {
-  func bindViewModels() {
-    let tappedNicknameCheckButton = self.nextButton
-      .publisher(for: .touchUpInside)
+  func bind() {
+    let output = viewModel.transform(from: input.eraseToAnyPublisher())
+    
+    buttonPublisher(for: nextButton)
+      .sink(receiveValue: { [weak self] in
+        self?.input.send(.tappedNicknameCheckButton)
+      })
+      .store(in: cancelBag)
+    
+    navigationBar.leftButtonTap
       .compactMap { _ in () }
       .receive(on: RunLoop.main)
-      .eraseToAnyPublisher()
-    
-    let tappedBackButton = self.navigationBar.leftButtonTap
-      .compactMap { _ in () }
-      .receive(on: RunLoop.main)
-      .eraseToAnyPublisher()
-    
-    let input = AuthViewModel.Input(
-      tappedKakaoLoginButton: nil,
-      tappedAppleLoginButton: nil,
-      tappedEmailLoginButton: nil,
-      tappedNicknameCheckButton: tappedNicknameCheckButton,
-      tappedSignUpSuccessButton: nil,
-      tappedBackButton: tappedBackButton
-    )
+      .sink(receiveValue: { [weak self] in
+        self?.input.send(.tappedBackButton)
+      })
+      .store(in: cancelBag)
     
     nicknameTextField.textChanged
       .receive(on: RunLoop.main)
@@ -132,10 +129,14 @@ private extension SetNicknameVC {
         self.nextButton.setEnabled(!text.isEmpty)
       }
       .store(in: cancelBag)
-    
-    let _ = self.viewModel.transform(from: input)
   }
   
+  private func buttonPublisher(for button: UIButton) -> AnyPublisher<Void, Never> {
+    button.publisher(for: .touchUpInside)
+      .map { _ in () }
+      .receive(on: RunLoop.main)
+      .eraseToAnyPublisher()
+  }
 }
 
 private extension SetNicknameVC {
