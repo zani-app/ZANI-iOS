@@ -15,60 +15,53 @@ import KakaoSDKUser
 
 public class AuthViewModel {
   
-  public struct Input {
-    let tappedKakaoLoginButton: AnyPublisher<Void, Never>?
-    let tappedAppleLoginButton: AnyPublisher<Void, Never>?
-    let tappedEmailLoginButton: AnyPublisher<Void, Never>?
-    let tappedNicknameCheckButton: AnyPublisher<Void, Never>?
-    let tappedSignUpSuccessButton: AnyPublisher<Void, Never>?
-    let tappedBackButton: AnyPublisher<Void, Never>?
+  enum Input {
+    case tappedKakaoLoginButton
+    case tappedAppleLoginButton
+    case tappedEmailLoginButton
+    case tappedNicknameCheckButton
+    case tappedSignUpSuccessButton
+    case tappedBackButton
   }
   
-  public struct Output {
+  enum Output {
     
   }
+  
+  private let output: PassthroughSubject<Output, Never> = .init()
   
   weak var delegate: AuthViewModelDelegate?
   
   private var cancelBag = CancelBag()
   
-  public func transform(from input: Input) -> Output {
-    let output = Output()
-    
-    input.tappedKakaoLoginButton?
-      .sink { _ in
-        print("kakao action")
-        self.delegate?.goToNickname()
+  func transform(from input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
+    input.sink { [weak self] event in
+      switch event {
+      case .tappedKakaoLoginButton:
+        print("Kakao login")
+        self?.delegate?.goToNickname()
+        
+      case .tappedAppleLoginButton:
+        print("Apple login")
+        
+      case .tappedEmailLoginButton:
+        print("Email login")
+        
+      case .tappedNicknameCheckButton:
+        print("nickname check button")
+        self?.delegate?.goToDone()
+        
+      case .tappedSignUpSuccessButton:
+        print("signup success")
+        
+      case .tappedBackButton:
+        print("move back")
+        self?.delegate?.goBack()
       }
-      .store(in: self.cancelBag)
+    }
+    .store(in: cancelBag)
     
-    input.tappedAppleLoginButton?
-      .sink { _ in
-        print("apple action")
-      }
-      .store(in: self.cancelBag)
-    
-    input.tappedEmailLoginButton?
-      .sink { _ in
-        print("email action")
-      }
-      .store(in: self.cancelBag)
-    
-    input.tappedNicknameCheckButton?
-      .sink { _ in
-        print("Nickname Check action")
-        self.delegate?.goToDone()
-      }
-      .store(in: self.cancelBag)
-    
-    input.tappedBackButton?
-      .sink { _ in
-        print("tapped Back Button")
-        self.delegate?.goBack()
-      }
-      .store(in: self.cancelBag)
-    
-    return output
+    return output.eraseToAnyPublisher()
   }
 }
 

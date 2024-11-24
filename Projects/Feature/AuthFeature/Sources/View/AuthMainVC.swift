@@ -19,6 +19,9 @@ public class AuthMainVC: UIViewController {
   
   public var viewModel: AuthViewModel!
   
+  private let input: PassthroughSubject<AuthViewModel.Input, Never> = .init()
+  private var cancelBag = CancelBag()
+  
   private lazy var titleLabel: UILabel = {
     let title = UILabel()
     title.text = "로그인/회원가입"
@@ -83,42 +86,40 @@ public class AuthMainVC: UIViewController {
   public override func viewDidLoad() {
     super.viewDidLoad()
     self.navigationController?.navigationBar.isHidden = true
-    self.bindViewModels()
+    self.bind()
     self.setUI()
     self.setLayout()
   }
 }
 
 private extension AuthMainVC {
-  func bindViewModels() {
-    let tappedKakaoLoginButton = self.kakaoLoginButton
-      .publisher(for: .touchUpInside)
-      .compactMap { _ in () }
+  func bind() {
+    let output = viewModel.transform(from: input.eraseToAnyPublisher())
+    
+    buttonPublisher(for: kakaoLoginButton)
+      .sink(receiveValue: { [weak self] in
+        self?.input.send(.tappedKakaoLoginButton)
+      })
+      .store(in: cancelBag)
+    
+    buttonPublisher(for: appleLoginButton)
+      .sink(receiveValue: { [weak self] in
+        self?.input.send(.tappedAppleLoginButton)
+      })
+      .store(in: cancelBag)
+    
+    buttonPublisher(for: emailLoginButton)
+      .sink(receiveValue: { [weak self] in
+        self?.input.send(.tappedEmailLoginButton)
+      })
+      .store(in: cancelBag)
+  }
+  
+  private func buttonPublisher(for button: UIButton) -> AnyPublisher<Void, Never> {
+    button.publisher(for: .touchUpInside)
+      .map { _ in () }
       .receive(on: RunLoop.main)
       .eraseToAnyPublisher()
-    
-    let tappedAppleLoginButton = self.appleLoginButton
-      .publisher(for: .touchUpInside)
-      .compactMap { _ in () }
-      .receive(on: RunLoop.main)
-      .eraseToAnyPublisher()
-    
-    let tappedEmailLoginButton = self.emailLoginButton
-      .publisher(for: .touchUpInside)
-      .compactMap { _ in () }
-      .receive(on: RunLoop.main)
-      .eraseToAnyPublisher()
-    
-    let input = AuthViewModel.Input(
-      tappedKakaoLoginButton: tappedKakaoLoginButton,
-      tappedAppleLoginButton: tappedAppleLoginButton,
-      tappedEmailLoginButton: tappedEmailLoginButton,
-      tappedNicknameCheckButton: nil,
-      tappedSignUpSuccessButton: nil,
-      tappedBackButton: nil
-    )
-    
-    let _ = self.viewModel.transform(from: input)
   }
 }
 
