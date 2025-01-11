@@ -9,6 +9,7 @@
 import UIKit
 
 import AuthFeature
+import NightMainFeature
 import BaseFeature
 
 public class AppCoordinator: Coordinator {
@@ -34,15 +35,22 @@ public class AppCoordinator: Coordinator {
     window.rootViewController = navigationController
     window.makeKeyAndVisible()
     
-    runAuthFlow()
+    runNightFlow()
   }
 }
 
 extension AppCoordinator {
   private func runAuthFlow() {
-    let authCoordinator = AuthCoordinator(navigationController: navigationController)
-    authCoordinator.parentCoordinator = self
-    addChildCoordinator(authCoordinator)
-    authCoordinator.start()
+    let coordinator = AuthCoordinator(navigationController: navigationController)
+    coordinator.parentCoordinator = self
+    addChildCoordinator(coordinator)
+    coordinator.start()
+  }
+  
+  private func runNightFlow() {
+    let coordinator = NightCoordinator(navigationController: navigationController)
+    coordinator.parentCoordinator = self
+    addChildCoordinator(coordinator)
+    coordinator.start()
   }
 }
