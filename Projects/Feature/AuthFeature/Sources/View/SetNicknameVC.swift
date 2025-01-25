@@ -34,6 +34,8 @@ public class SetNicknameVC: UIViewController {
       title: "회원가입"
     )
     
+    navigationBar.setBackgroundColor(color: .black)
+    
     return navigationBar
   }()
   
@@ -79,7 +81,20 @@ private extension SetNicknameVC {
     
     titleImage.snp.makeConstraints { make in
       make.width.equalTo(55)
+      make.height.equalTo(43)
     }
+    
+    let gradientLayer = CAGradientLayer()
+    gradientLayer.frame = self.view.bounds
+    
+    let backgroundColors: [CGColor] = [
+      UIColor.black.cgColor,
+      .init(red: 0, green: 208/255, blue: 1, alpha: 1)
+    ]
+    gradientLayer.colors = backgroundColors
+    gradientLayer.locations = [0.55]
+  
+    self.view.layer.addSublayer(gradientLayer)
   }
   
   func setLayout() {

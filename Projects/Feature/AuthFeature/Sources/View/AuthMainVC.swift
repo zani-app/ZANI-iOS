@@ -42,7 +42,7 @@ public class AuthMainVC: UIViewController {
   private lazy var subTitleLabel: UILabel = {
     let title = UILabel()
     title.text = "자니를 이용할 계정을 선택해주세요"
-    title.font = UIFont.ZANIFontType.body2.font
+    title.font = UIFont.ZANIFontType.body1.font
     title.textColor = DesignSystemAsset.mainGray.color
     title.numberOfLines = 1
     title.textAlignment = .left
@@ -124,12 +124,12 @@ private extension AuthMainVC {
     let gradientLayer = CAGradientLayer()
     gradientLayer.frame = self.view.bounds
     
-    let colors: [CGColor] = [
+    let backgroundColors: [CGColor] = [
       UIColor.black.cgColor,
       .init(red: 0, green: 208/255, blue: 1, alpha: 1)
     ]
-    gradientLayer.colors = colors
-    gradientLayer.locations = [0.6]
+    gradientLayer.colors = backgroundColors
+    gradientLayer.locations = [0.55]
   
     self.view.layer.addSublayer(gradientLayer)
   }
