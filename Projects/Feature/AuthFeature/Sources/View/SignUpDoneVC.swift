@@ -40,7 +40,7 @@ public class SignUpDoneVC: UIViewController {
   private lazy var nextButton: CustomLargeButton = {
     let button = CustomLargeButton(title: "다음")
     button.setEnabled(true)
-    button.setHeight(height: 48)
+    button.setHeight(height: 56)
     return button
   }()
   
