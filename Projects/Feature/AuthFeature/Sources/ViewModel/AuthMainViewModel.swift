@@ -13,19 +13,16 @@ import CoreKit
 
 import KakaoSDKUser
 
-public class AuthViewModel {
+public class AuthMainViewModel {
   
   enum Input {
     case tappedKakaoLoginButton
     case tappedAppleLoginButton
-    case tappedEmailLoginButton
-    case tappedNicknameCheckButton
-    case tappedSignUpSuccessButton
-    case tappedBackButton
+    case tappedGoogleLoginButton
   }
   
   enum Output {
-    
+    case loginFailure(error: Error)
   }
   
   private let output: PassthroughSubject<Output, Never> = .init()
@@ -43,20 +40,11 @@ public class AuthViewModel {
         
       case .tappedAppleLoginButton:
         print("Apple login")
+        self?.delegate?.goToNickname()
         
-      case .tappedEmailLoginButton:
-        print("Email login")
-        
-      case .tappedNicknameCheckButton:
-        print("nickname check button")
-        self?.delegate?.goToDone()
-        
-      case .tappedSignUpSuccessButton:
-        print("signup success")
-        
-      case .tappedBackButton:
-        print("move back")
-        self?.delegate?.goBack()
+      case .tappedGoogleLoginButton:
+        print("Google login")
+        self?.delegate?.goToNickname()
       }
     }
     .store(in: cancelBag)
@@ -65,7 +53,7 @@ public class AuthViewModel {
   }
 }
 
-private extension AuthViewModel {
+private extension AuthMainViewModel {
   func handleKakaoLogin() {
     if (UserApi.isKakaoTalkLoginAvailable()) {
       UserApi.shared.loginWithKakaoTalk {(oauthToken, error) in

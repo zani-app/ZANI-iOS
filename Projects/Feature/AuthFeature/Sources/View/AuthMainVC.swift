@@ -17,70 +17,66 @@ import SnapKit
 
 public class AuthMainVC: UIViewController {
   
-  public var viewModel: AuthViewModel!
+  public var viewModel: AuthMainViewModel!
   
-  private let input: PassthroughSubject<AuthViewModel.Input, Never> = .init()
+  private let input: PassthroughSubject<AuthMainViewModel.Input, Never> = .init()
   private var cancelBag = CancelBag()
+  
+  private lazy var titleImage: UIImageView = {
+    let imageView: UIImageView = UIImageView(image: DesignSystemAsset.doubleMoonIcon.image)
+    return imageView
+  }()
   
   private lazy var titleLabel: UILabel = {
     let title = UILabel()
-    title.text = "로그인/회원가입"
-    title.font = UIFont.ZANIFontType.head2.font
+    title.attributedText = UIFont.zaniAttributedString(
+      text: "지금 자니에서\n밤샘메이트들과 함께 해보세요!",
+      fontType: .title1
+    )
+    title.numberOfLines = 2
     title.textColor = .white
-    title.textAlignment = .center
+    title.textAlignment = .left
     return title
   }()
   
   private lazy var subTitleLabel: UILabel = {
     let title = UILabel()
-    title.text = "밤샘메이트들과 함께하는\n밤샘 서비스, 자니"
-    title.font = UIFont.ZANIFontType.title2.font
+    title.text = "자니를 이용할 계정을 선택해주세요"
+    title.font = UIFont.ZANIFontType.body2.font
     title.textColor = DesignSystemAsset.mainGray.color
-    title.numberOfLines = 2
-    title.textAlignment = .center
+    title.numberOfLines = 1
+    title.textAlignment = .left
     return title
   }()
   
-  private lazy var appleLoginButton: UIButton = {
-    let button = UIButton()
-    button.setImage(DesignSystemAsset.appleLoginBtnImage.image, for: .normal)
-    button.imageView?.contentMode = .scaleAspectFit
-    return button
+  private lazy var loginButtonStackView: UIStackView = {
+    let stackView = UIStackView()
+    stackView.axis = .vertical
+    stackView.alignment = .center
+    stackView.distribution = .fillEqually
+    stackView.spacing = 16
+    return stackView
   }()
   
   private lazy var kakaoLoginButton: UIButton = {
     let button = UIButton()
-    button.setImage(DesignSystemAsset.kakaoLoginBtnImage.image, for: .normal)
+    button.setImage(DesignSystemAsset.kakaoLoginButton.image, for: .normal)
     button.imageView?.contentMode = .scaleAspectFit
     return button
   }()
   
-  private lazy var emailLoginButton: UIButton = {
-    let button = UIButton(type: .system)
-    
-    var config = UIButton.Configuration.filled()
-    config.baseBackgroundColor = DesignSystemAsset.mainGray.color
-    config.baseForegroundColor = .black
-    button.configuration = config
-    
-    button.layer.cornerRadius = 26
-    button.layer.masksToBounds = true
-    
-    button.setAttributedTitle(
-      UIFont.zaniAttributedString(text: "이메일로 로그인하기", fontType: .title2),
-      for: .normal
-    )
-    
+  private lazy var appleLoginButton: UIButton = {
+    let button = UIButton()
+    button.setImage(DesignSystemAsset.appleLoginButton.image, for: .normal)
+    button.imageView?.contentMode = .scaleAspectFit
     return button
   }()
   
-  private lazy var emailSignUpText: UILabel = {
-    let label = UILabel()
-    label.text = "이메일로 회원가입"
-    label.font = UIFont.ZANIFontType.body1.font
-    label.textColor = DesignSystemAsset.mainGray.color
-    label.textAlignment = .center
-    return label
+  private lazy var googleLoginButton: UIButton = {
+    let button = UIButton()
+    button.setImage(DesignSystemAsset.googleLoginButton.image, for: .normal)
+    button.imageView?.contentMode = .scaleAspectFit
+    return button
   }()
   
   public override func viewDidLoad() {
@@ -108,11 +104,11 @@ private extension AuthMainVC {
       })
       .store(in: cancelBag)
     
-    buttonPublisher(for: emailLoginButton)
-      .sink(receiveValue: { [weak self] in
-        self?.input.send(.tappedEmailLoginButton)
-      })
-      .store(in: cancelBag)
+    output
+      .receive(on: RunLoop.main)
+      .sink { [weak self] result in
+        
+      }
   }
   
   private func buttonPublisher(for button: UIButton) -> AnyPublisher<Void, Never> {
@@ -125,50 +121,47 @@ private extension AuthMainVC {
 
 private extension AuthMainVC {
   func setUI() {
-    self.view.backgroundColor = DesignSystemAsset.main1.color
+    let gradientLayer = CAGradientLayer()
+    gradientLayer.frame = self.view.bounds
+    
+    let colors: [CGColor] = [
+      UIColor.black.cgColor,
+      .init(red: 0, green: 208/255, blue: 1, alpha: 1)
+    ]
+    gradientLayer.colors = colors
+    gradientLayer.locations = [0.6]
+  
+    self.view.layer.addSublayer(gradientLayer)
   }
   
   func setLayout() {
+    self.view.addSubview(titleImage)
     self.view.addSubview(titleLabel)
     self.view.addSubview(subTitleLabel)
-    self.view.addSubview(kakaoLoginButton)
-    self.view.addSubview(appleLoginButton)
-    self.view.addSubview(emailLoginButton)
-    self.view.addSubview(emailSignUpText)
+    self.view.addSubview(loginButtonStackView)
+    
+    loginButtonStackView.addArrangedSubview(kakaoLoginButton)
+    loginButtonStackView.addArrangedSubview(appleLoginButton)
+    loginButtonStackView.addArrangedSubview(googleLoginButton)
+    
+    titleImage.snp.makeConstraints { make in
+      make.top.equalTo(view.safeAreaLayoutGuide).offset(101)
+      make.leading.equalToSuperview().inset(43)
+    }
     
     titleLabel.snp.makeConstraints { make in
-      make.top.equalTo(view.safeAreaLayoutGuide).offset(180)
-      make.centerX.equalTo(self.view)
+      make.top.equalTo(titleImage.snp.bottom).offset(15)
+      make.leading.trailing.equalToSuperview().inset(48)
     }
     
     subTitleLabel.snp.makeConstraints { make in
-      make.top.equalTo(titleLabel.snp.bottom).offset(12)
-      make.centerX.equalTo(self.view)
+      make.top.equalTo(titleLabel.snp.bottom).offset(6)
+      make.leading.trailing.equalToSuperview().inset(48)
     }
     
-    kakaoLoginButton.snp.makeConstraints { make in
-      make.height.equalTo(52)
+    loginButtonStackView.snp.makeConstraints { make in
       make.leading.trailing.equalToSuperview().inset(20)
-      make.bottom.equalTo(appleLoginButton.snp.top).offset(-16)
-      make.centerX.equalTo(self.view)
-    }
-    
-    appleLoginButton.snp.makeConstraints { make in
-      make.height.equalTo(52)
-      make.leading.trailing.equalToSuperview().inset(20)
-      make.bottom.equalTo(emailLoginButton.snp.top).offset(-16)
-      make.centerX.equalTo(self.view)
-    }
-    
-    emailLoginButton.snp.makeConstraints { make in
-      make.height.equalTo(52)
-      make.leading.trailing.equalToSuperview().inset(20)
-      make.bottom.equalTo(emailSignUpText.snp.top).offset(-29)
-      make.centerX.equalTo(self.view)
-    }
-    
-    emailSignUpText.snp.makeConstraints { make in
-      make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-87)
+      make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-24)
       make.centerX.equalTo(self.view)
     }
   }

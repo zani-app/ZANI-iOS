@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "lucide_circle-alert.png",
+      "filename" : "회원가입 옵션-1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "lucide_circle-alert@2x.png",
+      "filename" : "회원가입 옵션@2x-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "lucide_circle-alert@3x.png",
+      "filename" : "회원가입 옵션@3x-1.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
