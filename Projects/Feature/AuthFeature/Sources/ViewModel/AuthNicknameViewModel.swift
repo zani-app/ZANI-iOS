@@ -34,6 +34,7 @@ public class AuthNicknameViewModel {
       case let .textInput(nickname):
         print("user nickname: \(nickname)")
         self?.output.send(.validate(nickname: nickname))
+        self?.delegate?.goToDone()
         
       case .tappedBackButton:
         print("Move Backs")
