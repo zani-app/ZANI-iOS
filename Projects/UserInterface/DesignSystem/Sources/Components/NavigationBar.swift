@@ -29,7 +29,7 @@ final public class NavigationBar: UIView {
   
   private let titleLabel: UILabel = {
     let label = UILabel()
-    label.font = UIFont.ZANIFontType.title2.font
+    label.font = UIFont.ZANIFontType.body1.font
     label.textColor = .white
     label.textAlignment = .center
     return label
@@ -76,6 +76,12 @@ extension NavigationBar {
   @discardableResult
   public func setLeftButtonImage(image: UIImage) -> Self {
     self.leftButton.setImage(image, for: .normal)
+    return self
+  }
+  
+  @discardableResult
+  public func setBackgroundColor(color: UIColor) -> Self {
+    self.backgroundColor = color
     return self
   }
 }

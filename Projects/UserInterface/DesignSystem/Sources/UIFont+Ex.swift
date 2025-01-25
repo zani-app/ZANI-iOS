@@ -27,13 +27,13 @@ extension UIFont {
       case .head2:
         return DesignSystemFontFamily.Pretendard.bold.font(size: 36)
       case .title1:
-        return DesignSystemFontFamily.Pretendard.bold.font(size: 20)
+        return DesignSystemFontFamily.Pretendard.bold.font(size: 23)  // ver2 변경 폰트 적용 완료
       case .title2:
         return DesignSystemFontFamily.Pretendard.bold.font(size: 16)
       case .title3:
         return DesignSystemFontFamily.Pretendard.bold.font(size: 16)
       case .body1:
-        return DesignSystemFontFamily.Pretendard.regular.font(size: 16)
+        return DesignSystemFontFamily.Pretendard.regular.font(size: 15) // ver2 변경 폰트 적용 완료
       case .body2:
         return DesignSystemFontFamily.Pretendard.regular.font(size: 14)
       case .body2Bold:
@@ -47,10 +47,10 @@ extension UIFont {
       switch self {
       case .head1: return 44
       case .head2: return 43
-      case .title1: return 24
+      case .title1: return 33
       case .title2: return 19
       case .title3: return 19
-      case .body1: return 19
+      case .body1: return 33
       case .body2: return 17
       case .body2Bold: return 17
       case .navi: return 16
