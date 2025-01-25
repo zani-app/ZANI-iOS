@@ -92,7 +92,7 @@ private extension SignUpDoneVC {
     
     titleImage.snp.makeConstraints { make in
       make.centerX.equalTo(self.view)
-      make.centerY.equalTo(self.view).offset(-60)
+      make.centerY.equalTo(self.view).offset(-80)
     }
     
     titleLabel.snp.makeConstraints { make in
