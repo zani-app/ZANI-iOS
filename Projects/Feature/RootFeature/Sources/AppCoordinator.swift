@@ -35,7 +35,7 @@ public class AppCoordinator: Coordinator {
     window.rootViewController = navigationController
     window.makeKeyAndVisible()
     
-    runNightFlow()
+    runAuthFlow()
   }
 }
 

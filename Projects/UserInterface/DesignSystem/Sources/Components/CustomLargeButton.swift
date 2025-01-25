@@ -39,6 +39,16 @@ extension CustomLargeButton {
   }
   
   @discardableResult
+  public func setHeight(height: CGFloat) -> Self {
+    self.snp.makeConstraints { make in
+      make.height.equalTo(height)
+    }
+    self.layer.cornerRadius = height / 2
+    self.clipsToBounds = true
+    return self
+  }
+  
+  @discardableResult
   public func setFontColor(customColor: UIColor = DesignSystemAsset.main1.color) -> Self {
     if let title = self.titleLabel, let text = title.text {
       let string = UIFont.zaniAttributedString(text: text, fontType: .title2)
@@ -52,7 +62,6 @@ extension CustomLargeButton {
 private extension CustomLargeButton {
   
   func setUI(_ title: String) {
-    self.layer.cornerRadius = 8
     self.backgroundColor = self.isEnabled ? DesignSystemAsset.mainYellow.color : DesignSystemAsset.mainGray.color
     self.setAttributedTitle(
       UIFont.zaniAttributedString(text: title, fontType: .title2),
