@@ -17,10 +17,16 @@ import SnapKit
 
 public class SetNicknameVC: UIViewController {
   
-  public var viewModel: AuthViewModel!
+  public var viewModel: AuthNicknameViewModel!
   
-  private let input: PassthroughSubject<AuthViewModel.Input, Never> = .init()
+  private let input: PassthroughSubject<AuthNicknameViewModel.Input, Never> = .init()
   private var cancelBag = CancelBag()
+  
+  private lazy var titleImage: UIImageView = {
+    let imageView: UIImageView = UIImageView(image: DesignSystemAsset.doubleMoonIcon.image)
+    imageView.contentMode = .scaleAspectFit
+    return imageView
+  }()
   
   private lazy var navigationBar: NavigationBar = {
     let navigationBar = NavigationBar(
@@ -35,7 +41,7 @@ public class SetNicknameVC: UIViewController {
     let title = UILabel()
     title.attributedText = UIFont.zaniAttributedString(
       text: "자니에서 사용할\n닉네임을 입력해주세요",
-      fontType: .head1
+      fontType: .title1
     )
     title.numberOfLines = 2
     title.textColor = .white
@@ -51,6 +57,7 @@ public class SetNicknameVC: UIViewController {
   private lazy var nextButton: CustomLargeButton = {
     let button = CustomLargeButton(title: "다음")
     button.setEnabled(false)
+    button.setHeight(height: 48)
     return button
   }()
   
@@ -69,9 +76,14 @@ public class SetNicknameVC: UIViewController {
 private extension SetNicknameVC {
   func setUI() {
     self.view.backgroundColor = DesignSystemAsset.main1.color
+    
+    titleImage.snp.makeConstraints { make in
+      make.width.equalTo(55)
+    }
   }
   
   func setLayout() {
+    self.view.addSubview(titleImage)
     self.view.addSubview(navigationBar)
     self.view.addSubview(titleLabel)
     self.view.addSubview(nicknameTextField)
@@ -82,19 +94,23 @@ private extension SetNicknameVC {
       make.leading.trailing.equalToSuperview()
     }
     
+    titleImage.snp.makeConstraints { make in
+      make.top.equalTo(navigationBar.snp.bottom).offset(38)
+      make.leading.equalToSuperview().inset(35)
+    }
+    
     titleLabel.snp.makeConstraints { make in
-      make.top.equalTo(navigationBar.snp.bottom).offset(62)
-      make.leading.equalToSuperview().offset(20)
+      make.top.equalTo(titleImage.snp.bottom).offset(10)
+      make.leading.equalToSuperview().inset(38)
     }
     
     nicknameTextField.snp.makeConstraints { make in
-      make.leading.trailing.equalToSuperview().inset(20)
-      make.top.equalTo(titleLabel.snp.bottom).offset(54)
+      make.top.equalTo(titleLabel.snp.bottom).offset(28)
+      make.leading.trailing.equalToSuperview().inset(35)
       make.centerX.equalTo(self.view)
     }
     
     nextButton.snp.makeConstraints { make in
-      make.height.equalTo(48)
       make.leading.trailing.equalToSuperview().inset(20)
       self.nextButtonBottomConstraint = make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-8).constraint
       make.centerX.equalTo(self.view)
@@ -108,7 +124,7 @@ private extension SetNicknameVC {
     
     buttonPublisher(for: nextButton)
       .sink(receiveValue: { [weak self] in
-        self?.input.send(.tappedNicknameCheckButton)
+        self?.input.send(.textInput(nickname: self?.nicknameTextField.text ?? ""))
       })
       .store(in: cancelBag)
     
