@@ -29,7 +29,7 @@ final public class NavigationBar: UIView {
   
   private let titleLabel: UILabel = {
     let label = UILabel()
-    label.font = UIFont.ZANIFontType.title1.font
+    label.font = UIFont.ZANIFontType.title2.font
     label.textColor = .white
     label.textAlignment = .center
     return label
