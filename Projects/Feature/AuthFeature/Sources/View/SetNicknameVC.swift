@@ -160,6 +160,24 @@ private extension SetNicknameVC {
         self.nextButton.setEnabled(!text.isEmpty)
       }
       .store(in: cancelBag)
+    
+    output
+      .receive(on: RunLoop.main)
+      .sink { [weak self] result in
+        switch result {
+        case let .textFieldState(isEnable):
+          if isEnable {
+            self?.nicknameTextField
+              .setDescriptionText(text: "사용 가능한 닉네임입니다.")
+              .setTextfieldState(state: .confirm)
+          } else {
+            self?.nicknameTextField
+              .setDescriptionText(text: "이미 있는 닉네임입니다.")
+              .setTextfieldState(state: .warning)
+          }
+        }
+      }
+      .store(in: cancelBag)
   }
   
   private func buttonPublisher(for button: UIButton) -> AnyPublisher<Void, Never> {

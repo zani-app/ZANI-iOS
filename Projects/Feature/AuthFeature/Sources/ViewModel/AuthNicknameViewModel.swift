@@ -19,7 +19,7 @@ public class AuthNicknameViewModel {
   }
   
   enum Output {
-    case validate(nickname: String)
+    case textFieldState(isEnable: Bool)
   }
   
   private let output: PassthroughSubject<Output, Never> = .init()
@@ -33,7 +33,7 @@ public class AuthNicknameViewModel {
       switch event {
       case let .textInput(nickname):
         print("user nickname: \(nickname)")
-        self?.output.send(.validate(nickname: nickname))
+        // self?.output.send(.textFieldState(isEnable: true)) // textfield 검증 로직
         self?.delegate?.goToDone()
         
       case .tappedBackButton:

@@ -46,6 +46,17 @@ public enum AuthTextFieldState {
       return DesignSystemAsset.errorRed.color
     }
   }
+  
+  public var descriptionColor: UIColor? {
+    switch self {
+    case .confirm:
+      return UIColor(cgColor: CGColor(red: 0, green: 216/255, blue: 123/255, alpha: 1))
+    case .warning:
+      return UIColor(cgColor: CGColor(red: 255/255, green: 100/255, blue: 100/255, alpha: 1))
+    default:
+      return nil
+    }
+  }
 }
 
 public class AuthTextField: UIView {
@@ -53,15 +64,20 @@ public class AuthTextField: UIView {
   private var cancelBag = CancelBag()
   
   // MARK: UI Component
-  private let textField = PastBlockedTextField()
+  private let textFieldContainerView = UIView()
+  private let textField = UITextField()
+  private let descriptionLabel: UILabel = {
+    let label = UILabel()
+    label.font = UIFont.ZANIFontType.body1.font
+    return label
+  }()
   
   public var type: AuthTextFieldType!
+  
   private var textFieldState = CurrentValueSubject<AuthTextFieldState, Never>(.normal)
   
   public var text: String {
-    get {
-      return textField.text ?? ""
-    }
+    return textField.text ?? ""
   }
   
   public var textChanged: AnyPublisher<String?, Never> {
@@ -84,6 +100,14 @@ public class AuthTextField: UIView {
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  public override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+    if action == #selector(UIResponderStandardEditActions.paste(_:)) {
+      return false
+    }
+    
+    return super.canPerformAction(action, withSender: sender)
   }
 }
 
@@ -110,14 +134,36 @@ extension AuthTextField {
     
     textFieldState
       .sink { [weak self] state in
+        // textfield state -> textfield border color
         self?.textField.layer.borderColor = state.borderColor.cgColor
+        
+        // textfield state -> description label
+        if state == .confirm || state == .warning {
+          self?.descriptionLabel.isHidden = false
+          self?.descriptionLabel.textColor = state.descriptionColor
+        } else {
+          self?.descriptionLabel.isHidden = true
+        }
       }
       .store(in: cancelBag)
+  }
+  
+  @discardableResult
+  public func setDescriptionText(text: String) -> Self {
+    self.descriptionLabel.text = text
+    return self
+  }
+  
+  @discardableResult
+  public func setTextfieldState(state: AuthTextFieldState) -> Self {
+    self.textFieldState.send(state)
+    return self
   }
 }
 
 // MARK: UI
 extension AuthTextField {
+  
   private func setDelegate() {
     self.textField.delegate = self
   }
@@ -140,14 +186,28 @@ extension AuthTextField {
   }
   
   private func setLayout() {
-    self.addSubview(textField)
+    self.addSubview(textFieldContainerView)
+    textFieldContainerView.addSubview(textField)
+    textFieldContainerView.addSubview(descriptionLabel)
+    
     self.configureTitleLabel()
   }
   
   private func configureTitleLabel() {
+    textFieldContainerView.snp.makeConstraints { make in
+      make.edges.equalToSuperview()
+    }
+    
     textField.snp.makeConstraints { make in
-      make.leading.trailing.top.bottom.equalToSuperview()
+      make.leading.trailing.equalToSuperview()
+      make.top.equalToSuperview()
       make.height.equalTo(48)
+    }
+    
+    descriptionLabel.snp.makeConstraints { make in
+      make.trailing.equalToSuperview()
+      make.top.equalTo(textField.snp.bottom).offset(12)
+      make.bottom.lessThanOrEqualToSuperview()
     }
   }
 }
