@@ -23,16 +23,84 @@ public class NightMainVC: UIViewController {
   private var cancelBag = CancelBag()
   
   private lazy var nightView1: NightIndicator = {
-    let nightView = NightIndicator(nightType: .inNight)
-    return nightView
-  }()
-  
-  private lazy var nightView2: NightIndicator = {
     let nightView = NightIndicator(nightType: .inTeam)
     return nightView
   }()
   
-  private lazy var nightView3: NightIndicator = {
+  private lazy var titleLabel: UILabel = {
+    let title = UILabel()
+    title.attributedText = UIFont.zaniAttributedString(
+      text: "팀 이름입니다",
+      fontType: .title1
+    )
+    title.numberOfLines = 1
+    title.textColor = .white
+    title.textAlignment = .left
+    return title
+  }()
+  
+  private lazy var descriptionLabel: UILabel = {
+    let title = UILabel()
+    title.attributedText = UIFont.zaniAttributedString(
+      text: "팀 소개!!팀 소개!!팀 소개!!팀 소개!!팀 소개!!개!!팀 소개!!팀 소개!!팀 소개!!팀 소개!!팀 소개!!",
+      fontType: .body2
+    )
+    title.numberOfLines = 3
+    title.textColor = .white
+    title.textAlignment = .left
+    return title
+  }()
+  
+  private lazy var timelineButton: UIButton = {
+    let button = UIButton(configuration: .plain())
+    button.titleLabel?.font = UIFont.ZANIFontType.body2Bold.font
+    
+    button.configurationUpdateHandler = { btn in
+      var config = btn.configuration ?? UIButton.Configuration.plain()
+      var title = AttributedString("미션 타임라인")
+      
+      title.font = UIFont.ZANIFontType.body2Bold.font
+      title.foregroundColor = DesignSystemAsset.main2.color
+      
+      config.attributedTitle = title
+      config.baseForegroundColor = DesignSystemAsset.main2.color
+      config.background.cornerRadius = 20
+      config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 12)
+      
+      let symbolConfig = UIImage.SymbolConfiguration(pointSize: 12, weight: .medium, scale: .medium)
+      config.image = UIImage(
+        systemName: "chevron.right",
+        withConfiguration: symbolConfig
+      )?.withRenderingMode(.alwaysTemplate)
+      config.imagePlacement = .trailing
+      config.imagePadding = 6
+      
+      if btn.state == .highlighted {
+        config.background.backgroundColor = UIColor(red: 0, green: 1, blue: 1, alpha: 1)
+      } else {
+        config.background.backgroundColor = UIColor(red: 0, green: 208/255, blue: 1, alpha: 1)
+      }
+      
+      btn.configuration = config
+    }
+    
+    return button
+  }()
+  
+  private lazy var teamInfoStack: UIStackView = {
+    let stackView = UIStackView()
+    stackView.axis = .vertical
+    stackView.spacing = 6
+    stackView.alignment = .leading
+    stackView.distribution = .fillEqually
+    return stackView
+  }()
+  
+  private lazy var nightInfo: TeamInfoCapsule = TeamInfoCapsule(infoType: .time, content: "밤샘시간")
+  private lazy var categoryInfo: TeamInfoCapsule = TeamInfoCapsule(infoType: .category, content: "카테고리")
+  private lazy var peopleInfo: TeamInfoCapsule = TeamInfoCapsule(infoType: .people, content: "인원")
+  
+  private lazy var nightView2: NightIndicator = {
     let nightView = NightIndicator(nightType: .noTeam)
     return nightView
   }()
@@ -49,41 +117,49 @@ public class NightMainVC: UIViewController {
 private extension NightMainVC {
   func bind() {
     let output = viewModel.transform(from: input.eraseToAnyPublisher())
-    
-    self.nightView1.activeButtonTap
-      .compactMap { _ in () }
-      .receive(on: RunLoop.main)
-      .sink(receiveValue: { [weak self] in
-        self?.input.send(.tappedEnterButton)
-      })
-      .store(in: cancelBag)
   }
 }
 
 private extension NightMainVC {
   func setUI() {
-    self.view.backgroundColor = DesignSystemAsset.main1.color
+    self.view.backgroundColor = DesignSystemAsset.main2.color
   }
   
   func setLayout() {
+    teamInfoStack.addArrangedSubview(nightInfo)
+    teamInfoStack.addArrangedSubview(peopleInfo)
+    teamInfoStack.addArrangedSubview(categoryInfo)
+    
     self.view.addSubview(nightView1)
-    self.view.addSubview(nightView2)
-    self.view.addSubview(nightView3)
+    self.view.addSubview(titleLabel)
+    self.view.addSubview(descriptionLabel)
+    self.view.addSubview(timelineButton)
+    self.view.addSubview(teamInfoStack)
     
     nightView1.snp.makeConstraints { make in
+      make.top.leading.trailing.equalToSuperview()
+      make.height.equalTo(nightView1.snp.width).multipliedBy(nightView1.imageRatio)
+    }
+    
+    titleLabel.snp.makeConstraints { make in
       make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
-      make.leading.trailing.equalToSuperview().inset(20)
-      make.centerX.equalTo(self.view)
+      make.leading.equalTo(view.safeAreaLayoutGuide).inset(28)
     }
     
-    nightView2.snp.makeConstraints { make in
-      make.top.equalTo(nightView1.snp.bottom).offset(20)
-      make.leading.trailing.equalToSuperview().inset(20)
+    descriptionLabel.snp.makeConstraints { make in
+      make.top.equalTo(titleLabel.snp.bottom).offset(22)
+      make.leading.equalTo(view.safeAreaLayoutGuide).inset(30)
+      make.trailing.equalTo(view.safeAreaLayoutGuide).inset(102)
     }
     
-    nightView3.snp.makeConstraints { make in
-      make.top.equalTo(nightView2.snp.bottom).offset(20)
-      make.leading.trailing.equalToSuperview().inset(20)
+    timelineButton.snp.makeConstraints { make in
+      make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
+      make.trailing.equalTo(view.safeAreaLayoutGuide).inset(22)
+    }
+    
+    teamInfoStack.snp.makeConstraints { make in
+      make.bottom.equalTo(nightView1.snp.bottom).offset(-26)
+      make.leading.equalTo(view.safeAreaLayoutGuide).inset(30)
     }
   }
 }
