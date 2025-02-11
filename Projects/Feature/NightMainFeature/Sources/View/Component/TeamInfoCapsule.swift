@@ -36,14 +36,14 @@ public class TeamInfoCapsule: UIView {
   private lazy var titleLabel: UILabel = {
     let label = UILabel()
     label.text = self.infoType.title
-    label.font = UIFont.ZANIFontType.body2Bold.font
+    label.font = UIFont.ZANIFontType.button2.font
     label.textColor = .white
     return label
   }()
   
   private lazy var contentLabel: UILabel = {
     let label = UILabel()
-    label.font = UIFont.ZANIFontType.body2Bold.font
+    label.font = UIFont.ZANIFontType.button3.font
     label.textColor = .white
     label.setContentHuggingPriority(.defaultLow, for: .horizontal)
     return label

@@ -31,7 +31,7 @@ public class AuthMainVC: UIViewController {
     let title = UILabel()
     title.attributedText = UIFont.zaniAttributedString(
       text: "지금 자니에서\n밤샘메이트들과 함께 해보세요!",
-      fontType: .title1
+      fontType: .title2
     )
     title.numberOfLines = 2
     title.textColor = .white

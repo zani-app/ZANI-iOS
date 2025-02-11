@@ -53,13 +53,12 @@ public class NightMainVC: UIViewController {
   
   private lazy var timelineButton: UIButton = {
     let button = UIButton(configuration: .plain())
-    button.titleLabel?.font = UIFont.ZANIFontType.body2Bold.font
     
     button.configurationUpdateHandler = { btn in
       var config = btn.configuration ?? UIButton.Configuration.plain()
       var title = AttributedString("미션 타임라인")
       
-      title.font = UIFont.ZANIFontType.body2Bold.font
+      title.font = UIFont.ZANIFontType.button2.font
       title.foregroundColor = DesignSystemAsset.main2.color
       
       config.attributedTitle = title
