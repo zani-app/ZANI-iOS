@@ -1,5 +1,5 @@
 //
-//  NightMainVC.swift
+//  NightActiveMainVC.swift
 //  NightMainFeatureInterface
 //
 //  Created by 정도현 on 11/24/24.
@@ -15,7 +15,7 @@ import DesignSystem
 
 import SnapKit
 
-public class NightMainVC: UIViewController {
+public class NightActiveMainVC: UIViewController {
   
   public var viewModel: NightViewModel!
   
@@ -99,10 +99,14 @@ public class NightMainVC: UIViewController {
   private lazy var categoryInfo: TeamInfoCapsule = TeamInfoCapsule(infoType: .category, content: "카테고리")
   private lazy var peopleInfo: TeamInfoCapsule = TeamInfoCapsule(infoType: .people, content: "인원")
   
-  private lazy var nightView2: NightIndicator = {
-    let nightView = NightIndicator(nightType: .noTeam)
-    return nightView
-  }()
+  private lazy var timer: NightTimer = NightTimer(timer: "12:13")
+  
+//  private lazy var nightView2: NightIndicator = {
+//    let nightView = NightIndicator(nightType: .noTeam)
+//    return nightView
+//  }()
+  
+  private let progressBar: CylinderGauge = CylinderGauge()
   
   public override func viewDidLoad() {
     super.viewDidLoad()
@@ -113,13 +117,13 @@ public class NightMainVC: UIViewController {
   }
 }
 
-private extension NightMainVC {
+private extension NightActiveMainVC {
   func bind() {
     let output = viewModel.transform(from: input.eraseToAnyPublisher())
   }
 }
 
-private extension NightMainVC {
+private extension NightActiveMainVC {
   func setUI() {
     self.view.backgroundColor = DesignSystemAsset.main2.color
   }
@@ -134,6 +138,8 @@ private extension NightMainVC {
     self.view.addSubview(descriptionLabel)
     self.view.addSubview(timelineButton)
     self.view.addSubview(teamInfoStack)
+    self.view.addSubview(timer)
+    self.view.addSubview(progressBar)
     
     nightView1.snp.makeConstraints { make in
       make.top.leading.trailing.equalToSuperview()
@@ -159,6 +165,12 @@ private extension NightMainVC {
     teamInfoStack.snp.makeConstraints { make in
       make.bottom.equalTo(nightView1.snp.bottom).offset(-26)
       make.leading.equalTo(view.safeAreaLayoutGuide).inset(30)
+    }
+    
+    timer.snp.makeConstraints { make in
+      make.width.equalToSuperview().multipliedBy(1.0/3.0)
+      make.trailing.equalTo(view.safeAreaLayoutGuide).inset(14)
+      make.bottom.equalTo(nightView1.snp.bottom).offset(-30)
     }
   }
 }
