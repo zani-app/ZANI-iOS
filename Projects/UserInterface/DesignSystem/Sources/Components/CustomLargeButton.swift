@@ -64,11 +64,11 @@ private extension CustomLargeButton {
   func setUI(_ title: String) {
     self.backgroundColor = self.isEnabled ? DesignSystemAsset.mainYellow.color : DesignSystemAsset.mainGray.color
     self.setAttributedTitle(
-      UIFont.zaniAttributedString(text: title, fontType: .title2),
+      UIFont.zaniAttributedString(text: title, fontType: .button1),
       for: .normal
     )
     self.setAttributedTitle(
-      UIFont.zaniAttributedString(text: title, fontType: .title2),
+      UIFont.zaniAttributedString(text: title, fontType: .button1),
       for: .disabled
     )
   }
