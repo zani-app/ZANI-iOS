@@ -27,9 +27,9 @@ public class NightCoordinator: Coordinator {
   }
   
   public func start() {
-    let nightMainVC = NightMainVC()
-    nightMainVC.viewModel = viewModel
+    let nightActiveMainVC = NightActiveMainVC()
+    nightActiveMainVC.viewModel = viewModel
     
-    navigationController.pushViewController(nightMainVC, animated: false)
+    navigationController.pushViewController(nightActiveMainVC, animated: false)
   }
 }

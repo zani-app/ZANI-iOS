@@ -10,50 +10,79 @@ import UIKit
 
 extension UIFont {
   public enum ZANIFontType {
-    case head1
-    case head2
+    case extraTitle
     case title1
     case title2
-    case title3
+    case head1
+    case head2BL
+    case head2BS
+    case button1
+    case button2
+    case button3
+    case button4
     case body1
     case body2
-    case body2Bold
     case navi
     
     public var font: UIFont {
       switch self {
-      case .head1:
-        return DesignSystemFontFamily.Pretendard.bold.font(size: 28)
-      case .head2:
-        return DesignSystemFontFamily.Pretendard.bold.font(size: 36)
+      case .extraTitle:
+        return DesignSystemFontFamily.Pretendard.bold.font(size: 48)
       case .title1:
-        return DesignSystemFontFamily.Pretendard.bold.font(size: 23)  // ver2 변경 폰트 적용 완료
+        return DesignSystemFontFamily.Pretendard.bold.font(size: 26)
       case .title2:
+        return DesignSystemFontFamily.Pretendard.bold.font(size: 23)
+      case .head1:
+        return DesignSystemFontFamily.Pretendard.bold.font(size: 20)
+      case .head2BL:
         return DesignSystemFontFamily.Pretendard.bold.font(size: 16)
-      case .title3:
-        return DesignSystemFontFamily.Pretendard.bold.font(size: 16)
-      case .body1:
-        return DesignSystemFontFamily.Pretendard.regular.font(size: 15) // ver2 변경 폰트 적용 완료
-      case .body2:
-        return DesignSystemFontFamily.Pretendard.regular.font(size: 14)
-      case .body2Bold:
-        return DesignSystemFontFamily.Pretendard.bold.font(size: 14)
-      case .navi:
+      case .head2BS:
+        return DesignSystemFontFamily.Pretendard.bold.font(size: 13)
+      case .button1:
+        return DesignSystemFontFamily.Pretendard.semiBold.font(size: 16)
+      case .button2:
+        return DesignSystemFontFamily.Pretendard.semiBold.font(size: 12)
+      case .button3:
         return DesignSystemFontFamily.Pretendard.regular.font(size: 12)
+      case .button4:
+        return DesignSystemFontFamily.Pretendard.regular.font(size: 11)
+      case .body1:
+        return DesignSystemFontFamily.Pretendard.regular.font(size: 15)
+      case .body2:
+        return DesignSystemFontFamily.Pretendard.regular.font(size: 13)
+      case .navi:
+        return DesignSystemFontFamily.Pretendard.regular.font(size: 10)
       }
     }
     
     var lineHeight: CGFloat {
       switch self {
-      case .head1: return 44
-      case .head2: return 43
-      case .title1: return 33
-      case .title2: return 19
-      case .title3: return 19
-      case .body1: return 33
-      case .body2: return 17
-      case .body2Bold: return 17
-      case .navi: return 16
+      case .extraTitle:
+        return 20
+      case .title1:
+        return 20
+      case .title2:
+        return 20
+      case .head1:
+        return 20
+      case .head2BL:
+        return 20
+      case .head2BS:
+        return 20
+      case .button1:
+        return 20
+      case .button2:
+        return 20
+      case .button3:
+        return 20
+      case .button4:
+        return 20
+      case .body1:
+        return 22
+      case .body2:
+        return 22
+      case .navi:
+        return 20
       }
     }
     
