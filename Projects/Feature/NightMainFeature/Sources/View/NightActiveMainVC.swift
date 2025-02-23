@@ -22,7 +22,7 @@ public class NightActiveMainVC: UIViewController {
   private let input: PassthroughSubject<NightViewModel.Input, Never> = .init()
   private var cancelBag = CancelBag()
   
-  private lazy var nightView1: NightIndicator = {
+  private lazy var nightIndicator: NightIndicator = {
     let nightView = NightIndicator(nightType: .inTeam)
     return nightView
   }()
@@ -101,11 +101,6 @@ public class NightActiveMainVC: UIViewController {
   
   private lazy var timer: NightTimer = NightTimer(timer: "12:13")
   
-//  private lazy var nightView2: NightIndicator = {
-//    let nightView = NightIndicator(nightType: .noTeam)
-//    return nightView
-//  }()
-  
   private let progressBar: CylinderGauge = CylinderGauge()
   
   public override func viewDidLoad() {
@@ -133,7 +128,7 @@ private extension NightActiveMainVC {
     teamInfoStack.addArrangedSubview(peopleInfo)
     teamInfoStack.addArrangedSubview(categoryInfo)
     
-    self.view.addSubview(nightView1)
+    self.view.addSubview(nightIndicator)
     self.view.addSubview(titleLabel)
     self.view.addSubview(descriptionLabel)
     self.view.addSubview(timelineButton)
@@ -141,9 +136,9 @@ private extension NightActiveMainVC {
     self.view.addSubview(timer)
     self.view.addSubview(progressBar)
     
-    nightView1.snp.makeConstraints { make in
+    nightIndicator.snp.makeConstraints { make in
       make.top.leading.trailing.equalToSuperview()
-      make.height.equalTo(nightView1.snp.width).multipliedBy(nightView1.imageRatio)
+      make.height.equalTo(nightIndicator.snp.width).multipliedBy(nightIndicator.imageRatio)
     }
     
     titleLabel.snp.makeConstraints { make in
@@ -163,14 +158,14 @@ private extension NightActiveMainVC {
     }
     
     teamInfoStack.snp.makeConstraints { make in
-      make.bottom.equalTo(nightView1.snp.bottom).offset(-26)
+      make.bottom.equalTo(nightIndicator.snp.bottom).offset(-26)
       make.leading.equalTo(view.safeAreaLayoutGuide).inset(30)
     }
     
     timer.snp.makeConstraints { make in
       make.width.equalToSuperview().multipliedBy(1.0/3.0)
       make.trailing.equalTo(view.safeAreaLayoutGuide).inset(14)
-      make.bottom.equalTo(nightView1.snp.bottom).offset(-30)
+      make.bottom.equalTo(nightIndicator.snp.bottom).offset(-30)
     }
   }
 }
