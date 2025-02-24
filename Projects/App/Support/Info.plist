@@ -19,11 +19,9 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakao${KAKAO_NATIVE_APP_KEY}</string>
+				<string>$(GOOGLE_REVERSED_KEY)</string>
 			</array>
 		</dict>
 	</array>
@@ -78,5 +76,7 @@
 		<string>kakaoplus</string>
 		<string>kakaotalk</string>
 	</array>
+	<key>GOOGLE_CLIENT_KEY</key>
+	<string>$(GOOGLE_CLIENT_KEY)</string>
 </dict>
 </plist>

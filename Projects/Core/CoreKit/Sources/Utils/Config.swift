@@ -13,6 +13,7 @@ public enum Config {
     public enum Plist: String {
       case baseURL = "BASE_URL"
       case kakakoAppKey = "KAKAO_NATIVE_APP_KEY"
+      case googleClientKey = "GOOGLE_CLIENT_KEY"
     }
   }
   

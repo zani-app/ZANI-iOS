@@ -12,6 +12,7 @@ import BaseDomain
 import CoreKit
 
 import KakaoSDKUser
+import GoogleSignIn
 
 public class AuthMainViewModel {
   
@@ -37,7 +38,7 @@ public class AuthMainViewModel {
       
       switch event {
       case .tappedKakaoLoginButton:
-        self.handleKakaoLogin()
+        self.kakaoSignIn()
         // self.delegate?.goToNickname()
         
       case .tappedAppleLoginButton:
@@ -45,8 +46,8 @@ public class AuthMainViewModel {
         self.delegate?.goToNickname()
         
       case .tappedGoogleLoginButton:
-        print("Google login")
-        self.delegate?.goToNickname()
+        self.googleSignIn()
+        // self.delegate?.goToNickname()
       }
     }
     .store(in: cancelBag)
@@ -56,7 +57,7 @@ public class AuthMainViewModel {
 }
 
 private extension AuthMainViewModel {
-  func handleKakaoLogin() {
+  func kakaoSignIn() {
     if (UserApi.isKakaoTalkLoginAvailable()) {
       UserApi.shared.loginWithKakaoTalk {(oauthToken, error) in
         if let oauthToken = oauthToken {
@@ -80,6 +81,38 @@ private extension AuthMainViewModel {
         if let error = error {
           print(error.localizedDescription)
         }
+      }
+    }
+  }
+}
+
+private extension AuthMainViewModel {
+  func googleSignIn() {
+    
+    let clientID = Config.getPropertyValue(.googleClientKey)
+    
+    let configuration = GIDConfiguration(clientID: clientID)
+    GIDSignIn.sharedInstance.configuration = configuration
+    
+    guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+    guard let rootViewController = windowScene.windows.first?.rootViewController else { return }
+    
+    GIDSignIn.sharedInstance.signIn(
+      withPresenting: rootViewController,
+      hint: nil,
+      additionalScopes: [
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/contacts",
+        "https://www.googleapis.com/auth/contacts.readonly"
+      ]
+    ) { [unowned self] result, error in
+      guard let result = result else { return }
+      
+      if let serverAuthCode = result.serverAuthCode {
+        print(serverAuthCode)
+      } else {
+        print("🚨 warning - GIDSignIn ERROR")
       }
     }
   }
