@@ -10,8 +10,9 @@ import Foundation
 
 public enum Config {
   public enum Keys {
-    public enum Plist {
-      static let baseURL = "BASE_URL"
+    public enum Plist: String {
+      case baseURL = "BASE_URL"
+      case kakakoAppKey = "KAKAO_NATIVE_APP_KEY"
     }
   }
   
@@ -24,11 +25,11 @@ public enum Config {
 }
 
 extension Config {
-  public static let baseURL: String = {
-    guard let key = Config.infoDictionary[Keys.Plist.baseURL] as? String else {
-      fatalError("Base URL is not set in plist for this configuration.")
+  public static func getPropertyValue(_ target: Config.Keys.Plist) -> String {
+    guard let key = Config.infoDictionary[target.rawValue] as? String else {
+      fatalError("\(target.rawValue) is not set in plist for this configuration.")
     }
     
     return key
-  }()
+  }
 }

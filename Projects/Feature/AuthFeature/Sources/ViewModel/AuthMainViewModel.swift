@@ -33,18 +33,20 @@ public class AuthMainViewModel {
   
   func transform(from input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
     input.sink { [weak self] event in
+      guard let self = self else { return }
+      
       switch event {
       case .tappedKakaoLoginButton:
-        print("Kakao login")
-        self?.delegate?.goToNickname()
+        self.handleKakaoLogin()
+        // self.delegate?.goToNickname()
         
       case .tappedAppleLoginButton:
         print("Apple login")
-        self?.delegate?.goToNickname()
+        self.delegate?.goToNickname()
         
       case .tappedGoogleLoginButton:
         print("Google login")
-        self?.delegate?.goToNickname()
+        self.delegate?.goToNickname()
       }
     }
     .store(in: cancelBag)

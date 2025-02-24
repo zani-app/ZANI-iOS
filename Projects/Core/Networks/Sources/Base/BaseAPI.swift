@@ -22,7 +22,7 @@ public protocol BaseAPI: TargetType {
 
 extension BaseAPI {
   public var baseURL: URL {
-    var base = Config.baseURL
+    var base = Config.getPropertyValue(.baseURL)
     
     switch Self.apiType {
       // MARK: API TYPE ADDRESS
