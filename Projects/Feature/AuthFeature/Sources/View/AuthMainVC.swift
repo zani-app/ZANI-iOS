@@ -104,6 +104,12 @@ private extension AuthMainVC {
       })
       .store(in: cancelBag)
     
+    buttonPublisher(for: googleLoginButton)
+      .sink(receiveValue: { [weak self] in
+        self?.input.send(.tappedGoogleLoginButton)
+      })
+      .store(in: cancelBag)
+    
     output
       .receive(on: RunLoop.main)
       .sink { [weak self] result in

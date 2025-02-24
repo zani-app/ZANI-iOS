@@ -98,7 +98,6 @@ xcuserdata
 
 ### Tuist ###
 XCConfig/*
-!XCConfig/Shared.xcconfig
 Tuist/Dependencies
 Derived/
 *.xcworkspace

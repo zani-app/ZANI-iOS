@@ -7,13 +7,14 @@ let project = Project.module(
   targets: [
     .implements(
       module: .shared(.GlobalThirdPartyLibrary),
-      product: .framework,
+      product: .staticFramework,
       dependencies: [
         .SPM.Alamofire,
         .SPM.Moya,
         .SPM.Swinject,
         .SPM.SnapKit,
-        .SPM.KakaoSDKUser
+        .SPM.KakaoSDKUser,
+        .SPM.GoogleSignIn
       ]
     )
   ]
